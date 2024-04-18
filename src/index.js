@@ -31,7 +31,6 @@ function run() {
       Host.outputString(`Error scraping URL: ${error.message}`);
     }
   } else {
-    // Plain text, output directly using Host.outputString
     Host.outputString(Host.inputString());
   }
 }
