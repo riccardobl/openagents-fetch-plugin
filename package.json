@@ -1,0 +1,19 @@
+{
+  "name": "oa-fetch-plugin",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "build": "node esbuild.js && extism-js dist/index.js -i src/index.d.ts -o dist/plugin.wasm"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "types": "./index.d.ts",
+  "devDependencies": {
+    "esbuild": "^0.20.2"
+  },
+  "dependencies": {
+    "cheerio": "^1.0.0-rc.12"
+  }
+}
