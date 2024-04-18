@@ -24,10 +24,10 @@ function run() {
         $(element).remove();
       });
 
-      // Use Host.outputString to send the output string
+
       Host.outputString(texts.join("\n"));
     } catch (error) {
-      // Use Host.outputString for error message as well
+
       Host.outputString(`Error scraping URL: ${error.message}`);
     }
   } else {
