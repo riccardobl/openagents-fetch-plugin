@@ -1,19 +1,26 @@
 {
-  "name": "oa-fetch-plugin",
-  "version": "1.0.0",
-  "description": "",
-  "main": "index.js",
-  "scripts": {
-    "build": "node esbuild.js && extism-js dist/index.js -i src/index.d.ts -o dist/plugin.wasm"
-  },
-  "keywords": [],
-  "author": "",
-  "license": "ISC",
-  "types": "./index.d.ts",
-  "devDependencies": {
-    "esbuild": "^0.20.2"
-  },
-  "dependencies": {
-    "cheerio": "^1.0.0-rc.12"
-  }
+    "name": "oa-fetch-plugin",
+    "version": "1.0.0",
+    "description": "",
+    "main": "index.js",
+    "scripts": {
+        "test": "echo \"Error: no test specified\" && exit 1",
+        "build": "bash setup.sh && export PATH=\"$PATH:$PWD/tmp/binaryen/bin:$PWD/tmp/extismjs/bin\" && node esbuild.js && $PWD/tmp/extismjs/bin/extism-js dist/index.js -i src/index.d.ts -o dist/plugin.wasm",
+        "start": "bash setup.sh && $PWD/tmp/extism/bin/extism call dist/plugin.wasm run --input \"$JSON\" --wasi --allow-host '*'",
+        "debug": "npm run build && export JSON='[\"https://nostr.com/\"]' && npm run start"
+    },
+    "keywords": [],
+    "author": "",
+    "license": "ISC",
+    "types": "./index.d.ts",
+    "devDependencies": {
+        "@esbuild-plugins/node-modules-polyfill": "^0.2.2",
+        "esbuild": "^0.20.2"
+    },
+    "dependencies": {
+        "cheerio": "^1.0.0-rc.12",
+        "htmlarkdown": "^1.0.2",
+        "showdown": "^2.1.0",
+        "turndown": "^7.1.3"
+    }
 }

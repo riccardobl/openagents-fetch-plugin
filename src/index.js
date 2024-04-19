@@ -1,38 +1,40 @@
-const cheerio = require('cheerio'); 
-
+import * as cheerio from 'cheerio';
+import TurndownService from 'turndown';
 function run() {
-  // Check if the input is a URL
-  if (Host.inputString().startsWith("http")) {
-    try {
-      const response = Http.request({
-        method: "GET",
-        url: Host.inputString(),
-      });
-      if (response.status !== 200) {
-        throw new Error(`Error fetching URL: ${response.status}`);
-      }
-      const html = response.body;
-      const $ = cheerio.load(html);
+    const inputUrls = JSON.parse(Host.inputString());
 
-      const texts = [];
-      $("article").each((_, element) => {
-        texts.push(...$(element).text().trim().split("\n"));
-        $(element).remove();
-      });
-      $("p").each((_, element) => {
-        texts.push(...$(element).text().trim().split("\n"));
-        $(element).remove();
-      });
+    const outputDocs = [];
 
+    for (const url of inputUrls) {
+        const response = Http.request({
+            method: "GET",
+            url: url,
+            headers: {
+                'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/58.0.3029.110 Safari/537.36'
+            }
+        });
+        if (response.status !== 200) throw new Error("Error scraping url " + response.status + " " + response.body);
 
-      Host.outputString(texts.join("\n"));
-    } catch (error) {
+        const $ = cheerio.load(response.body);
+        let htmlContent = ""
+        $("main").each((_, element) => {
+            element = $(element);
+            htmlContent += element.html();
+            element.remove();
+        });
 
-      Host.outputString(`Error scraping URL: ${error.message}`);
+        $("body").each((_, element) => {
+            element = $(element);
+            htmlContent += element.html();
+            element.remove();
+        });
+
+        const mdContent = new TurndownService().turndown(htmlContent);
+        outputDocs.push(mdContent);
+
     }
-  } else {
-    Host.outputString(Host.inputString());
-  }
+    Host.outputString(JSON.stringify(outputDocs));
+
 }
 
 module.exports = { run };
